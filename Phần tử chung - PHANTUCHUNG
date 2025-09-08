@@ -1,0 +1,48 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <set>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int nx, ny, nz;
+    cin >> nx;
+    vector<int> x(nx);
+    for (int i = 0; i < nx; i++) cin >> x[i];
+
+    cin >> ny;
+    vector<int> y(ny);
+    for (int i = 0; i < ny; i++) cin >> y[i];
+
+    cin >> nz;
+    vector<int> z(nz);
+    for (int i = 0; i < nz; i++) cin >> z[i];
+
+    // Dùng set để loại bỏ phần tử trùng trong từng dãy
+    set<int> sx(x.begin(), x.end());
+    set<int> sy(y.begin(), y.end());
+    set<int> sz(z.begin(), z.end());
+
+    vector<int> temp, common;
+
+    // Tìm phần giao của 2 tập: sx ∩ sy → temp
+    set_intersection(sx.begin(), sx.end(),
+                     sy.begin(), sy.end(),
+                     back_inserter(temp));
+
+    // Tiếp tục tìm giao với sz: (sx ∩ sy) ∩ sz → common
+    set_intersection(temp.begin(), temp.end(),
+                     sz.begin(), sz.end(),
+                     back_inserter(common));
+
+    // In ra số lượng phần tử chung và danh sách các phần tử
+    cout << common.size() << "\n";
+    for (int v : common) cout << v << " ";
+
+    return 0;
+}
