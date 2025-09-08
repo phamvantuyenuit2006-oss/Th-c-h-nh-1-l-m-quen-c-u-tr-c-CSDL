@@ -1,0 +1,67 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <sstream>
+using namespace std;
+
+// Hàm sàng Eratosthenes: tìm tất cả số nguyên tố ≤ n
+vector<int> sieve(int n) {
+    vector<bool> isPrime(n+1, true);
+    isPrime[0] = isPrime[1] = false;
+    for (int i = 2; i * i <= n; i++) {
+        if (isPrime[i]) {
+            for (int j = i * i; j <= n; j += i) {
+                isPrime[j] = false;
+            }
+        }
+    }
+    vector<int> primes;
+    for (int i = 2; i <= n; i++) {
+        if (isPrime[i]) primes.push_back(i);
+    }
+    return primes;
+}
+
+int main() {
+    vector<int> inputs;
+    int n;
+    // Đọc nhiều giá trị N từ input
+    while (cin >> n) {
+        inputs.push_back(n);
+    }
+    
+    int max_n = 1000;
+    // Tìm các số nguyên tố ≤ 1000
+    vector<int> primes = sieve(max_n);
+    
+    // Xử lý từng N trong danh sách inputs
+    for (int N : inputs) {
+        vector<int> exponents; // Lưu số mũ của các số nguyên tố trong N!
+        
+        for (int p : primes) {
+            if (p > N) break; // dừng nếu p > N
+            int count = 0;
+            int power = p;
+            // Công thức số mũ: N/p + N/p^2 + N/p^3 + ...
+            while (power <= N) {
+                count += N / power;
+                power *= p;
+            }
+            exponents.push_back(count);
+        }
+  
+        // Bỏ các số 0 dư thừa ở cuối
+        while (!exponents.empty() && exponents.back() == 0) {
+            exponents.pop_back();
+        }
+
+        // In ra dãy số mũ của phân tích N!
+        for (int i = 0; i < exponents.size(); i++) {
+            if (i != 0) cout << " ";
+            cout << exponents[i];
+        }
+        cout << endl;
+    }
+    
+    return 0;
+}
