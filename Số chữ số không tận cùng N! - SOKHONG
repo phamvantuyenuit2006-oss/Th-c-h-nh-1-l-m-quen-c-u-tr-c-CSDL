@@ -1,0 +1,23 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+long long countTrailingZeros(long long n) {
+    long long cnt = 0;
+    while (n > 0) {
+        n /= 5;
+        cnt += n;
+    }
+    return cnt;
+}
+
+int main() {
+    long long n;
+    while (cin >> n) {  // đọc cho đến hết dữ liệu
+        cout << countTrailingZeros(n) << endl;
+    }
+    return 0;
+}
