@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+const ll INF = (1LL<<60);
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int n, m;
+    int s, t;
+    if (!(cin >> n >> m >> s >> t)) return 0;
+    vector<vector<pair<int,int>>> graph(n + 1);
+    for (int i = 0; i < m; ++i) {
+        int u, v;
+        int w;
+        cin >> u >> v >> w;
+        graph[u].push_back({v, w});
+    }
+    vector<ll> dist(n + 1, INF);
+    vector<int> parent(n + 1, -1);
+    dist[s] = 0;
+ priority_queue<pair<ll,int>, vector<pair<ll,int>>, greater<pair<ll,int>>> pq;
+    pq.push({0, s});
+
+    while (!pq.empty()) {
+        auto [d, u] = pq.top(); pq.pop();
+        if (d != dist[u]) continue; 
+        if (u == t) break; 
+
+        for (auto &e : graph[u]) {
+            int v = e.first;
+            int w = e.second;
+            if (dist[u] + w < dist[v]) {
+                dist[v] = dist[u] + w;
+                parent[v] = u;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+
+    if (dist[t] == INF) {
+        cout << -1 << '\n';
+        return 0;
+    }
+    vector<int> path;
+    int cur = t;
+    while (cur != -1) {
+        path.push_back(cur);
+        cur = parent[cur];
+    }
+    reverse(path.begin(), path.end());
+
+    cout << path.size() << " " << dist[t] << '\n';
+    for (size_t i = 0; i < path.size(); ++i) {
+        if (i) cout << " ";
+        cout << path[i];
+    }
+    cout << '\n';
+    return 0;
+}
